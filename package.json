@@ -1,8 +1,8 @@
 {
 	"name": "baseline-feature-advisor",
 	"displayName": "AI-Powered Baseline Feature Advisor",
-	"description": "Detect unsafe web APIs and get AI-powered suggestions for Baseline-supported alternatives.",
-	"version": "1.0.4",
+	"description": "Detect non-Baseline or unsafe web APIs, HTML attributes, and CSS features with instant AI-powered Quick Fixes.",
+	"version": "2.0.0",
 	"publisher": "Algma-Tech",
 	"author": {
 		"name": "Adam Adekanye Adewale (Algma Tech)",
@@ -15,10 +15,11 @@
 	"icon": "adam.png",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.74.0"
+		"vscode": "^1.90.0"
 	},
 	"categories": [
 		"Linters",
+		"Programming Languages",
 		"Other"
 	],
 	"keywords": [
@@ -26,26 +27,37 @@
 		"baseline",
 		"compatibility",
 		"api",
+		"css",
+		"html",
 		"scanner",
 		"ai",
+		"gemini",
 		"security"
 	],
 	"activationEvents": [
 		"onLanguage:javascript",
+		"onLanguage:javascriptreact",
 		"onLanguage:typescript",
-		"onLanguage:html"
+		"onLanguage:typescriptreact",
+		"onLanguage:html",
+		"onLanguage:css"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
 				"command": "baselineAdvisor.scanFile",
-				"title": "Scan for Non-Baseline APIs",
+				"title": "Scan File for Non-Baseline Features",
 				"category": "Baseline Advisor"
 			},
 			{
 				"command": "baselineAdvisor.scanWorkspace",
-				"title": "Scan Workspace for Non-Baseline APIs",
+				"title": "Scan Workspace for Non-Baseline Features",
+				"category": "Baseline Advisor"
+			},
+			{
+				"command": "baselineAdvisor.askAIForFix",
+				"title": "Get AI Baseline Fix",
 				"category": "Baseline Advisor"
 			}
 		],
@@ -57,10 +69,35 @@
 					"default": true,
 					"description": "Enable real-time scanning while typing"
 				},
+				"baselineAdvisor.targetBaseline": {
+					"type": "string",
+					"enum": [
+						"widely",
+						"newly"
+					],
+					"default": "widely",
+					"description": "Minimum Baseline support level: 'widely' (30+ months cross-browser) or 'newly' (latest interoperable release)"
+				},
 				"baselineAdvisor.aiSuggestions": {
 					"type": "boolean",
 					"default": true,
-					"description": "Enable AI-powered suggestions"
+					"description": "Enable AI-powered code suggestions and Quick Fixes"
+				},
+				"baselineAdvisor.aiProvider": {
+					"type": "string",
+					"enum": [
+						"auto",
+						"vscode-lm",
+						"gemini",
+						"openai"
+					],
+					"default": "auto",
+					"description": "AI provider: 'auto' (uses configured API key or VS Code built-in AI), 'vscode-lm' (Copilot/built-in models), 'gemini', or 'openai'"
+				},
+				"baselineAdvisor.geminiApiKey": {
+					"type": "string",
+					"default": "",
+					"description": "Google Gemini API Key for AI suggestions"
 				},
 				"baselineAdvisor.openaiApiKey": {
 					"type": "string",
@@ -76,20 +113,11 @@
 		"watch": "tsc -watch -p ./"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.74.0",
-		"@types/node": "16.x",
-		"@types/node-fetch": "^2.6.11",
-		"typescript": "^4.9.4"
+		"@types/node": "^20.0.0",
+		"@types/vscode": "^1.90.0"
 	},
 	"dependencies": {
-		"web-features": "^0.8.6",
-		"acorn": "^8.11.3",
-		"acorn-walk": "^8.3.2",
-		"node-fetch": "^2.6.7"
-	},
-	"__metadata": {
-		"installedTimestamp": 1759729399547,
-		"targetPlatform": "undefined",
-		"size": 3009969
+		"typescript": "^5.6.0",
+		"web-features": "latest"
 	}
 }
